@@ -1,0 +1,111 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Battlestar', sans-serif;                             
+}
+
+body {
+    background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* For the game */
+
+.general-container {
+    background-color: black;
+    width: 600px;
+    height: 690px;
+}
+
+.scores {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20px;
+}
+
+.header_HS {
+    font-size: 20px;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+    
+}
+
+.high_score_text {
+    margin-top: 10px;
+}
+
+.score {
+    font-size: 20px;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+.score-text {
+    margin-top: 10px;
+}
+
+#map_01 {
+    box-sizing: border-box;
+    width: 600px;
+    height: 600px;
+    background-color: black;
+    display: block;
+    position: absolute;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.tile{
+    width: 40px;
+    height: 40px;
+
+    /* make them stick together */
+    display: inline-block;
+    vertical-align: top;
+}
+
+.wall{
+    background-size: 40px 40px;
+    background-image: url('img/Brick-wall.jpeg');
+    border: none;
+}
+
+
+/* coins should be make smaller than 50px; */
+.coin{
+    background-color: yellow;
+    border-radius: 50%;
+    transform: scale(0.3);
+}
+/* 
+.innerlay{
+    background-color: yellow;
+    width: 30px;
+    height: 30px;
+} */
+
+.emptyspace{
+    width: 40px;
+    height: 40px;
+    background-color: black;
+    display: inline-block;
+}
+
+
+.pacman{
+    background-size: 40px 40px;
+    background-image: url('img/pacman.gif');
+    background-repeat: no-repeat;
+}
+
+.ghosts {
+    background-color: blue;
+}

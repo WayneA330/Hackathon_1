@@ -4,18 +4,31 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Layout </title>
+        <title>Puck-man Returns</title>
         <link href="http://fonts.cdnfonts.com/css/battlestar" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="game.css">
     </head>
     <body>
+        <div class="general-container" id="game_container">
+            <div class="scores">
+                 <!-- High Score -->
+                <div class="header_HS">
+                    <h2>HIGH SCORE</h2>
+                    <p class="high_score_text">0</p>
+                </div>
 
-        
-        <div id="map_01">
+                 <!-- Score -->
+                <div class="score">
+                    <h2>SCORE</h2>
+                    <p class="score-text">0</p>
+                </div>
+            </div>
+            <!-- Map -->
+            <div id="map_01"></div>
+
         </div>
-   
 
         <script src="script.js" charset="utf-8"></script>
     </body>

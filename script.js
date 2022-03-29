@@ -37,7 +37,7 @@ let gameData = [
   [1,2,2,2,2,2,2,2,2,2,2,2,2,2,1], // Row 9
   [1,2,1,2,1,1,1,1,1,1,1,2,1,2,1], // Row 10
   [1,2,1,2,1,1,1,1,1,1,1,2,1,2,1], // Row 11
-  [1,2,1,2,2,2,5,2,2,2,2,2,1,2,1], // Row 12
+  [1,2,1,2,2,2,2,5,2,2,2,2,1,2,1], // Row 12
   [1,2,1,1,1,1,2,1,2,1,1,1,1,2,1], // Row 13
   [1,2,2,2,2,2,2,1,2,2,2,2,2,2,1], // Row 14
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], // Row 15
@@ -134,4 +134,72 @@ function drawMap() {
 }
 
 drawMap();
+
+// variable to set actions for the different arrows that we are pressing
+let pacman_pos = {
+  x: 7,
+  y: 11,
+};
+
+function verifyPacmanPosition() {
+  let value = gameData[pacman_pos.y][pacman_pos.x];
+  console.log(value === 5);
+}
+verifyPacmanPosition();
+
+
+
+
+// General function for pacman movement
+function modifyDirection(x, y) {
+  console.log(gameData[pacman_pos.y + y][pacman_pos.x + x]);
+
+  if (gameData[pacman_pos.y + y][pacman_pos.x + x] ==! Wall) {
+    gameData[pacman_pos.y][pacman_pos.x] = Emptyspace;
+    pacman_pos.x += x;
+    pacman_pos.y += y;
+    gameData[pacman_pos.y + y][pacman_pos.x + x] = Pacman;    
+  }
+
+  drawMap();
+}
+
+
+// The function that will move pacman with its arguments.
+function movePacman(key) {
+  // left
+  if (key === 'ArrowLeft') {
+    console.log('left');
+    modifyDirection(-1, 0);
+
+  }
+
+  // up
+  else if (key === 'ArrowUp') {
+    console.log('up');
+    modifyDirection(0, -1);
+  }
+
+  // right
+  else if (key === 'ArrowRight') {
+    console.log('right');
+    modifyDirection(1, 0);
+  }
+
+  // down
+  else if (key === 'ArrowDown') {
+    console.log('down');
+    modifyDirection(0, 1);
+  }
+}
+
+
+
+function setArrowControls() {
+  document.addEventListener('keydown', function(e) {
+    movePacman(e.key);
+  });
+}
+
+setArrowControls();
 

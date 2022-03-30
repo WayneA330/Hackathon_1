@@ -106,6 +106,26 @@ body {
     background-repeat: no-repeat;
 }
 
-.ghosts {
-    background-color: blue;
+.blinky {
+    background-size: 40px 40px;
+    background-image: url('img/blinky.png');
+    background-repeat: no-repeat;
+}
+
+.pinky {
+    background-size: 40px 40px;
+    background-image: url('img/pinky.png');
+    background-repeat: no-repeat;  
+}
+
+.inky {
+    background-size: 40px 40px;
+    background-image: url('img/inky.png');
+    background-repeat: no-repeat;
+}
+
+.clyde {
+    background-size: 40px 40px;
+    background-image: url('img/clyde.png');
+    background-repeat: no-repeat;
 }

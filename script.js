@@ -32,7 +32,7 @@ let gameData = [
   [1,2,1,2,2,2,2,2,2,2,2,2,1,2,1], // Row 4
   [1,2,1,2,1,1,1,1,1,1,1,2,1,2,1], // Row 5
   [1,2,1,2,2,2,2,2,2,2,2,2,1,2,1], // Row 6
-  [1,2,2,2,1,4,4,1,4,4,1,2,2,2,1], // Row 7
+  [1,2,2,2,1,4,6,1,7,8,1,2,2,2,1], // Row 7
   [1,2,1,2,1,1,1,1,1,1,1,2,1,2,1], // Row 8
   [1,2,2,2,2,2,2,2,2,2,2,2,2,2,1], // Row 9
   [1,2,1,2,1,1,1,1,1,1,1,2,1,2,1], // Row 10
@@ -49,9 +49,13 @@ let gameData = [
 const Wall = 1;
 const Coin = 2;
 const Emptyspace = 3;
-const Ghosts = 4;
+const Blinky = 4;
 const Pacman = 5;
-const InnerLay = 6;
+const Pinky = 6;
+const Inky = 7;
+const Clyde = 8;
+const InnerLay = 9;
+
 
 //lets start with the smallest components, stating with the layouts.
 //This function converts gameData arrays into DOM elements.
@@ -87,8 +91,17 @@ function createTiles(gameData) {
       } else if (el_em === Emptyspace) {
         tile.classList.add('emptyspace');
 
-      } else if(el_em === Ghosts) {
-          tile.classList.add('ghosts');
+      } else if(el_em === Blinky) {
+          tile.classList.add('blinky');
+      }
+      else if (el_em === Pinky) {
+        tile.classList.add('pinky');
+      }
+      else if (el_em === Inky) {
+        tile.classList.add('inky');
+      } 
+      else if (el_em === Clyde) {
+        tile.classList.add('clyde')
       }
       else if(el_em === InnerLay) {
           tile.classList.add('innerlay');
@@ -130,6 +143,8 @@ function drawMap() {
 
   let elem = document.getElementById('map_01');  
 
+  elem.innerText = '';
+
   elem.append(map)
 }
 
@@ -152,13 +167,14 @@ verifyPacmanPosition();
 
 // General function for pacman movement
 function modifyDirection(x, y) {
-  console.log(gameData[pacman_pos.y + y][pacman_pos.x + x]);
+  // console.log(gameData[pacman_pos.y + y][pacman_pos.x + x]);
 
-  if (gameData[pacman_pos.y + y][pacman_pos.x + x] ==! Wall) {
+  if (gameData[pacman_pos.y + y][pacman_pos.x + x] !== Wall) {
     gameData[pacman_pos.y][pacman_pos.x] = Emptyspace;
+    gameData[pacman_pos.y + y][pacman_pos.x + x] = Pacman;    
     pacman_pos.x += x;
     pacman_pos.y += y;
-    gameData[pacman_pos.y + y][pacman_pos.x + x] = Pacman;    
+    
   }
 
   drawMap();
@@ -192,8 +208,6 @@ function movePacman(key) {
     modifyDirection(0, 1);
   }
 }
-
-
 
 function setArrowControls() {
   document.addEventListener('keydown', function(e) {

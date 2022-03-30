@@ -54,7 +54,6 @@ const Pacman = 5;
 const Pinky = 6;
 const Inky = 7;
 const Clyde = 8;
-const InnerLay = 9;
 
 
 //lets start with the smallest components, stating with the layouts.
@@ -102,9 +101,6 @@ function createTiles(gameData) {
       } 
       else if (el_em === Clyde) {
         tile.classList.add('clyde')
-      }
-      else if(el_em === InnerLay) {
-          tile.classList.add('innerlay');
       }
       else if (el_em === Pacman) {
         tile.classList.add('pacman');
@@ -174,7 +170,6 @@ function modifyDirection(x, y) {
     gameData[pacman_pos.y + y][pacman_pos.x + x] = Pacman;    
     pacman_pos.x += x;
     pacman_pos.y += y;
-    
   }
 
   drawMap();
@@ -187,7 +182,6 @@ function movePacman(key) {
   if (key === 'ArrowLeft') {
     console.log('left');
     modifyDirection(-1, 0);
-
   }
 
   // up

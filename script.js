@@ -32,7 +32,7 @@ let gameData = [
   [1,2,1,2,2,2,2,2,2,2,2,2,1,2,1], // Row 4
   [1,2,1,2,1,1,1,1,1,1,1,2,1,2,1], // Row 5
   [1,2,1,2,2,2,2,2,2,2,2,2,1,2,1], // Row 6
-  [1,2,2,2,1,4,6,1,7,8,1,2,2,2,1], // Row 7
+  [1,2,2,2,1,1,4,1,8,1,1,2,2,2,1], // Row 7
   [1,2,1,2,1,1,1,1,1,1,1,2,1,2,1], // Row 8
   [1,2,2,2,2,2,2,2,2,2,2,2,2,2,1], // Row 9
   [1,2,1,2,1,1,1,1,1,1,1,2,1,2,1], // Row 10
@@ -51,15 +51,49 @@ const Coin = 2;
 const Emptyspace = 3;
 const Blinky = 4;
 const Pacman = 5;
-const Pinky = 6;
-const Inky = 7;
 const Clyde = 8;
 
+// variable to set actions for the different arrows that we are pressing
+let pacman_pos = {
+  x: 7,
+  y: 11,
+  direction: 'right'
+};
+
+// Draw map
+// Make all titles stay in line so it does not move out of order
+let map = null;
+
+// Initial Score for the game
+let score = 0;
+let high_score = 0;
+let score_text = document.getElementById('score');
+let high_score_text = document.getElementById('high_score');
+const max_score = 1980;
+
+function drawMap() {
+  let map = document.createElement('div');
+
+  let tiles = createTiles(gameData);
+
+  for (let tile of tiles) {
+    map.appendChild(tile);
+  }
+
+  high_score_text.innerText = high_score;
+
+  let elem = document.getElementById('map_01');  
+
+  elem.innerText = '';
+
+  elem.append(map);
+  
+}
+drawMap();
+Check_High_Score();
 
 //lets start with the smallest components, stating with the layouts.
 //This function converts gameData arrays into DOM elements.
-
-
 function createTiles(gameData) {
 
   // We'll keep the DOM elements in an array.
@@ -93,17 +127,12 @@ function createTiles(gameData) {
       } else if(el_em === Blinky) {
           tile.classList.add('blinky');
       }
-      else if (el_em === Pinky) {
-        tile.classList.add('pinky');
-      }
-      else if (el_em === Inky) {
-        tile.classList.add('inky');
-      } 
       else if (el_em === Clyde) {
         tile.classList.add('clyde')
       }
       else if (el_em === Pacman) {
         tile.classList.add('pacman');
+        tile.classList.add(pacman_pos.direction)
       }
 
       // Our individual tiles are assign a class and its their appearance are described in CSS,
@@ -124,50 +153,25 @@ function createTiles(gameData) {
 }
 
 
-// Make all titles stay in line so it does not move out of order
-let map = null;
-
-// Draw map
-function drawMap() {
-  let map = document.createElement('div');
-
-  let tiles = createTiles(gameData);
-
-  for (let tile of tiles) {
-    map.appendChild(tile);
-  }
-
-  let elem = document.getElementById('map_01');  
-
-  elem.innerText = '';
-
-  elem.append(map)
-}
-
-drawMap();
-
-// variable to set actions for the different arrows that we are pressing
-let pacman_pos = {
-  x: 7,
-  y: 11,
-};
-
-function verifyPacmanPosition() {
-  let value = gameData[pacman_pos.y][pacman_pos.x];
-  console.log(value === 5);
-}
-verifyPacmanPosition();
-
-
-
-
 // General function for pacman movement
 function modifyDirection(x, y) {
   // console.log(gameData[pacman_pos.y + y][pacman_pos.x + x]);
 
   if (gameData[pacman_pos.y + y][pacman_pos.x + x] !== Wall) {
+    
+    if (gameData[pacman_pos.y + y][pacman_pos.x + x] === Coin) {
+      score += 20;
+      score_text.innerText = score;
+    }
+
+    gameData[pacman_pos.y + y][pacman_pos.x + x] = Pacman;
     gameData[pacman_pos.y][pacman_pos.x] = Emptyspace;
-    gameData[pacman_pos.y + y][pacman_pos.x + x] = Pacman;    
+
+    // Alert for winning
+    if (score === max_score) {
+      level_completed();
+    }
+    
     pacman_pos.x += x;
     pacman_pos.y += y;
   }
@@ -176,38 +180,74 @@ function modifyDirection(x, y) {
 }
 
 
-// The function that will move pacman with its arguments.
 function movePacman(key) {
   // left
   if (key === 'ArrowLeft') {
     console.log('left');
+    pacman_pos.direction = 'left';
     modifyDirection(-1, 0);
   }
 
   // up
   else if (key === 'ArrowUp') {
     console.log('up');
+    pacman_pos.direction = 'up';
     modifyDirection(0, -1);
   }
 
   // right
   else if (key === 'ArrowRight') {
     console.log('right');
+    pacman_pos.direction = 'right';
     modifyDirection(1, 0);
   }
 
   // down
   else if (key === 'ArrowDown') {
     console.log('down');
+    pacman_pos.direction = 'down';
     modifyDirection(0, 1);
   }
 }
+
 
 function setArrowControls() {
   document.addEventListener('keydown', function(e) {
     movePacman(e.key);
   });
 }
-
 setArrowControls();
 
+
+function Check_High_Score() {
+  high_score = localStorage.getItem('high-score');
+
+  if (high_score < score) {
+    high_score_text.innerText = score;
+    localStorage.setItem('high-score', score);
+    high_score = score;
+
+  }
+  else if (high_score > score) {
+    high_score_text.innerText = high_score;
+  }
+
+  else if (high_score == undefined) {
+    high_score_text.innerText = '0';
+    high_score = 0;
+
+  }
+}
+
+function level_completed() {
+  setTimeout(function() {
+    alert('CONGRATULATIONS. YOU HAVE WON!!!!');
+  }, 500); 
+
+  Check_High_Score();
+}
+// function verifyPacmanPosition() {
+//   let value = gameData[pacman_pos.y][pacman_pos.x];
+//   // console.log(value === 5);
+// }
+// verifyPacmanPosition();

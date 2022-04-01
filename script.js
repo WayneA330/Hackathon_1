@@ -18,6 +18,8 @@ function audio_button() {
     }
 }
 
+
+
 //Game Configuration
 
 //We will use numerical representation for all elements in pacman
@@ -90,10 +92,12 @@ let score = 0;
 let high_score = 0;
 let score_text = document.getElementById('score');
 let high_score_text = document.getElementById('high_score');
+// let high_score_text2 = document.getElementById('high_score2');
 const max_score = 1980;
 let audio_coin = new Audio('sounds/waka.wav');
 let pacman_win = new Audio('sounds/gameWin.wav');
 let timeout;
+let t_delay = 200;
 
 function drawMap() {
   let map = document.createElement('div');
@@ -192,6 +196,8 @@ function modifyDirection(x, y) {
       if (gameData[y_new][x_new] === Coin) {
         score += 20;
         score_text.innerText = score;
+
+        audio_coin.play();
       }
 
       gameData[y_new][x_new] = Pacman;
@@ -246,7 +252,7 @@ function setArrowControls() {
   let lastMove = 0;
   document.addEventListener('keydown', function(e) {
     // do nothing if last move was less than 200 ms ago
-    if(Date.now() - lastMove > 200) {
+    if(Date.now() - lastMove > t_delay) {
       movePacman(e.key);
         lastMove = Date.now();
     }
@@ -256,6 +262,7 @@ setArrowControls();
 
 
 function Check_High_Score() {
+  // high_score_text2 = localStorage.getItem('high-score');
   high_score = localStorage.getItem('high-score');
 
   if (high_score < score) {
@@ -343,7 +350,7 @@ function moveGhost(ghost){
     }
 
     drawMap();
-  }, 200)
+  }, t_delay + 20)
 }
 
 function getRandomInt(max) {

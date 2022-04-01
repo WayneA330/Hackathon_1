@@ -192,6 +192,8 @@ function modifyDirection(x, y) {
       if (gameData[y_new][x_new] === Coin) {
         score += 20;
         score_text.innerText = score;
+
+        audio_coin.play();
       }
 
       gameData[y_new][x_new] = Pacman;

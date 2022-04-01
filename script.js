@@ -91,6 +91,9 @@ let high_score = 0;
 let score_text = document.getElementById('score');
 let high_score_text = document.getElementById('high_score');
 const max_score = 1980;
+let audio_coin = new Audio('sounds/waka.wav');
+let pacman_win = new Audio('sounds/gameWin.wav');
+let timeout;
 
 function drawMap() {
   let map = document.createElement('div');
@@ -183,7 +186,7 @@ function modifyDirection(x, y) {
     if (gameData[y_new][x_new] > Emptyspace){
       gameData[pacman_pos.y][pacman_pos.x] = Emptyspace; // Pacman disappear
       game_over();
-    }
+      }
 
     else{
       if (gameData[y_new][x_new] === Coin) {
@@ -272,9 +275,14 @@ function Check_High_Score() {
 }
 
 function level_completed() {
-  setTimeout(function() {
+  timeout = setTimeout(function() {
+    pacman_win.play();
     alert('CONGRATULATIONS. YOU HAVE WON!!!!');
   }, 500); 
+
+  // setTimeout(function() {
+  //   clearTimeout(timeout);
+  // }, 5000);
 
   Check_High_Score();
 }

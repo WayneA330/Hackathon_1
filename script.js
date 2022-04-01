@@ -292,11 +292,16 @@ function level_completed() {
 // }
 // verifyPacmanPosition();
 
+
 function game_over(){
   setTimeout(function() {
     alert('Game Over! :(');
+
+    window.location = 'index.html';
+   
   }, 200);
 
+ 
   Check_High_Score();
 }
 

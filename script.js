@@ -1,6 +1,3 @@
-
-
-
 //Game Configuration
 
 //We will use numerical representation for all elements in pacman
@@ -25,7 +22,7 @@ let gameData = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], // Row 15
 ];
 
-
+// For the direction of the ghosts
 let direction = [
     [-1, 0],
     [0, -1],
@@ -73,11 +70,9 @@ let score = 0;
 let high_score = 0;
 let score_text = document.getElementById('score');
 let high_score_text = document.getElementById('high_score');
-// let high_score_text2 = document.getElementById('high_score2');
 const max_score = 1980;
 let audio_coin = new Audio('sounds/waka.wav');
 let pacman_win = new Audio('sounds/gameWin.wav');
-let timeout;
 let t_delay = 200;
 
 function drawMap() {
@@ -256,30 +251,20 @@ function Check_High_Score() {
     high_score_text.innerText = high_score;
   }
 
-  else if (high_score === undefined) {
+  else if (high_score === null) {
     high_score_text.innerText = '0';
     high_score = 0;
   }
 }
 
 function level_completed() {
-  timeout = setTimeout(function() {
+  setTimeout(function() {
     pacman_win.play();
     alert('CONGRATULATIONS. YOU HAVE WON!!!!');
   }, 500); 
 
-  // setTimeout(function() {
-  //   clearTimeout(timeout);
-  // }, 5000);
-
   Check_High_Score();
 }
-// function verifyPacmanPosition() {
-//   let value = gameData[pacman_pos.y][pacman_pos.x];
-//   // console.log(value === 5);
-// }
-// verifyPacmanPosition();
-
 
 function game_over(){
   setTimeout(function() {
@@ -293,9 +278,32 @@ function game_over(){
   Check_High_Score();
 }
 
+function getPossibleDirections(ghost) {
+  let pos_dir = [];
+  for (let dir of direction){
+    let y_new = ghost.y + dir[1];
+    let x_new = ghost.x + dir[0];
+    if ((gameData[y_new][x_new] === Pacman) ||
+        (gameData[y_new][x_new] === Coin) ||
+        (gameData[y_new][x_new] === Emptyspace)
+    ) {
+      pos_dir.push(dir);
+    }
+  }
+  return pos_dir;
+}
+
+
 function moveGhost(ghost){
   let past_position = Emptyspace;
+
   setInterval(function(){
+    let possible_dir = getPossibleDirections(ghost);
+    // Allow ghost to change course when more options are available
+    if (possible_dir.length > 2){
+      ghost.direction = possible_dir[getRandomInt(possible_dir.length)]
+    }
+
     let y_new = ghost.y + ghost.direction[1];
     let x_new = ghost.x + ghost.direction[0];
 
@@ -311,7 +319,7 @@ function moveGhost(ghost){
         game_over();
       }
 
-      else if(gameData[y_new][x_new] === Emptyspace){
+      else if (gameData[y_new][x_new] === Emptyspace){
         gameData[y_new][x_new] = ghost.id;
         gameData[ghost.y][ghost.x] = past_position;
         past_position = Emptyspace;
@@ -326,12 +334,12 @@ function moveGhost(ghost){
       ghost.x = x_new;
       ghost.y = y_new;
     }
-    else{
-      ghost.direction = direction[getRandomInt(4)]
+    else {
+      ghost.direction = possible_dir[getRandomInt(possible_dir.length)]
     }
 
     drawMap();
-  }, t_delay + 20)
+   }, t_delay + 100)
 }
 
 function getRandomInt(max) {
@@ -340,3 +348,9 @@ function getRandomInt(max) {
 
 moveGhost(blinky_pos);
 moveGhost(clyde_pos);
+
+// function verifyPacmanPosition() {
+//   let value = gameData[pacman_pos.y][pacman_pos.x];
+//   // console.log(value === 5);
+// }
+// verifyPacmanPosition();

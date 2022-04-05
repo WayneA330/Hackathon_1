@@ -51,14 +51,16 @@ let blinky_pos = {
   x: 6,
   y: 6,
   direction: direction[1],
-  id: Blinky
+  id: Blinky,
+  name: "Blinky"
 };
 
 let clyde_pos = {
   x: 8,
   y: 6,
   direction: direction[1],
-  id: Clyde
+  id: Clyde,
+  name: "Clyde"
 };
 
 // Draw map
@@ -263,6 +265,7 @@ function level_completed() {
     alert('CONGRATULATIONS. YOU HAVE WON!!!!');
   }, 500); 
 
+  stopGhost();
   Check_High_Score();
 }
 
@@ -274,7 +277,7 @@ function game_over(){
    
   }, 200);
 
- 
+  stopGhost();
   Check_High_Score();
 }
 
@@ -283,8 +286,22 @@ function getPossibleDirections(ghost) {
   for (let dir of direction){
     let y_new = ghost.y + dir[1];
     let x_new = ghost.x + dir[0];
-    if ((gameData[y_new][x_new] === Pacman) ||
-        (gameData[y_new][x_new] === Coin) ||
+
+    // Find vector to reach pacman
+    let y_vector = pacman_pos.y - ghost.y;
+    let x_vector = pacman_pos.x - ghost.x;
+
+    // Reduce vector to unit vector
+    let y_unit = y_vector === 0 ? 0 : y_vector / Math.abs(y_vector);
+    let x_unit = x_vector === 0 ? 0 : x_vector / Math.abs(x_vector);
+
+    // // if vector is not abs(1,1), use that direction (left, right, top, bottom)
+    if ((y_unit * x_unit) === 0 &&
+        gameData[ghost.y + y_unit][ghost.x + x_unit] !== Wall) {
+      console.log(ghost.name + " is chasing Pacman!");
+      return([ [x_unit, y_unit] ]);
+    }
+    else if ((gameData[y_new][x_new] === Coin) ||
         (gameData[y_new][x_new] === Emptyspace)
     ) {
       pos_dir.push(dir);
@@ -297,16 +314,18 @@ function getPossibleDirections(ghost) {
 function moveGhost(ghost){
   let past_position = Emptyspace;
 
-  setInterval(function(){
+  let interval = setInterval(function(){
     let possible_dir = getPossibleDirections(ghost);
     // Allow ghost to change course when more options are available
     if (possible_dir.length > 2){
-      ghost.direction = possible_dir[getRandomInt(possible_dir.length)]
+      ghost.direction = possible_dir[getRandomInt(possible_dir.length)];
+    }
+    else if (possible_dir.length === 1){
+      ghost.direction = possible_dir[0];
     }
 
     let y_new = ghost.y + ghost.direction[1];
     let x_new = ghost.x + ghost.direction[0];
-
 
     if ((gameData[y_new][x_new] === Pacman) ||
         (gameData[y_new][x_new] === Coin) ||
@@ -319,7 +338,7 @@ function moveGhost(ghost){
         game_over();
       }
 
-      else if (gameData[y_new][x_new] === Emptyspace){
+      else if(gameData[y_new][x_new] === Emptyspace){
         gameData[y_new][x_new] = ghost.id;
         gameData[ghost.y][ghost.x] = past_position;
         past_position = Emptyspace;
@@ -334,23 +353,24 @@ function moveGhost(ghost){
       ghost.x = x_new;
       ghost.y = y_new;
     }
-    else {
+    else{
       ghost.direction = possible_dir[getRandomInt(possible_dir.length)]
     }
 
     drawMap();
-   }, t_delay + 100)
+  }, t_delay + 100)
+
+  return interval;
 }
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-moveGhost(blinky_pos);
-moveGhost(clyde_pos);
+function stopGhost(){
+  clearInterval(blinky_interval);
+  clearInterval(clyde_interval);
+}
 
-// function verifyPacmanPosition() {
-//   let value = gameData[pacman_pos.y][pacman_pos.x];
-//   // console.log(value === 5);
-// }
-// verifyPacmanPosition();
+let blinky_interval = moveGhost(blinky_pos);
+let clyde_interval = moveGhost(clyde_pos);
